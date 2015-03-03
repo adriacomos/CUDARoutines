@@ -26,11 +26,12 @@ namespace CCFeatureTrackerGPU_K {
 
 		if (x < cols && y < rows) {
 
+			int blockFact = blockIdx.x + blockIdx.y;
 			int offset = (x * 3) + y * step;
 
-			frameOut[ offset ] =  frameIn[ offset + 2];
+			frameOut[ offset ] =  frameIn[ offset];
 			frameOut[ offset + 1 ] = frameIn[ offset + 1];
-			frameOut[ offset + 2 ] = frameIn[offset];
+			frameOut[ offset + 2 ] = frameIn[offset + 2];
 		}
 
 		__syncthreads();

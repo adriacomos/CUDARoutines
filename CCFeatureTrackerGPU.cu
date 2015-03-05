@@ -1,4 +1,4 @@
-#include "kernel.h"
+#include "kernels.h"
 
 #include "cuda_runtime.h"
 #include "device_launch_parameters.h"
@@ -12,6 +12,8 @@
 
 using namespace cv::gpu;
 
+namespace CUDARoutines {
+
 namespace CCFeatureTrackerGPU_K {
 
 
@@ -20,13 +22,9 @@ namespace CCFeatureTrackerGPU_K {
 		const int x = threadIdx.x + blockIdx.x * blockDim.x;
         const int y = threadIdx.y + blockIdx.y * blockDim.y;
 
-
-		/*int offset = x + y * blockDim.x * gridDim.x;*/
-				
+		// TODO		
 
 		if (x < cols && y < rows) {
-
-			int blockFact = blockIdx.x + blockIdx.y;
 			int offset = (x * 3) + y * step;
 
 			frameOut[ offset ] =  frameIn[ offset];
@@ -57,7 +55,7 @@ namespace CCFeatureTrackerGPU_K {
 	    // Check for any errors launching the kernel
 		cudaStatus = cudaGetLastError();
 		if (cudaStatus != cudaSuccess) {
-			fprintf(stderr, "addKernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
+			fprintf(stderr, "innerProcessKernel launch failed: %s\n", cudaGetErrorString(cudaStatus));
 			goto Error;
 		}
     
@@ -65,7 +63,7 @@ namespace CCFeatureTrackerGPU_K {
 		// any errors encountered during the launch.
 		cudaStatus = cudaDeviceSynchronize();
 		if (cudaStatus != cudaSuccess) {
-			fprintf(stderr, "cudaDeviceSynchronize returned error code %d after launching addKernel!\n", cudaStatus);
+			fprintf(stderr, "cudaDeviceSynchronize returned error code %d after launching innerProcessKernel!\n", cudaStatus);
 			goto Error;
 		}
 
@@ -73,5 +71,7 @@ namespace CCFeatureTrackerGPU_K {
 Error:
 		return;
 	}
+
+}
 
 }

@@ -19,6 +19,7 @@ namespace CCFeatureTrackerGPU_K {
 
 	__global__ void innerProcessKernel( long cols, long rows, unsigned char* frameIn, unsigned char*  frameOut, int step )
 	{
+	
 		const int x = threadIdx.x + blockIdx.x * blockDim.x;
         const int y = threadIdx.y + blockIdx.y * blockDim.y;
 

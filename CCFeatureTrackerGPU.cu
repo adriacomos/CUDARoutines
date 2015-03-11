@@ -58,7 +58,7 @@ namespace CCFeatureTrackerGPU_K {
 	{
 		
 		cudaError_t cudaStatus;
-		dim3 block(16, 16);
+		dim3 block(32, 8);
 
 		
         dim3 grid;

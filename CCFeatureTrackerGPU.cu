@@ -23,14 +23,29 @@ namespace CCFeatureTrackerGPU_K {
 		const int x = threadIdx.x + blockIdx.x * blockDim.x;
         const int y = threadIdx.y + blockIdx.y * blockDim.y;
 
-		// TODO		
-
-		if (x < cols && y < rows) {
+		int sizeK = 41;
+		int borderk = 20;
+		int sq = sizeK * sizeK;
+		
+		if (x < cols - borderk && y < rows-borderk && x > borderk && y > borderk) {
 			int offset = (x * 3) + y * step;
+			
+			int R = 0,G = 0,B = 0;
+			for( int iy=-borderk; iy<borderk+1; iy++)
+			{
+				for( int ix=-borderk; ix<borderk+1; ix++)
+				{
+					R += frameIn[offset + ix*3 + iy*step ];
+					G += frameIn[offset+1 + ix*3 + iy*step ];
+					B += frameIn[offset+2 + ix*3 + iy*step ];
+				}
+			}
 
-			frameOut[ offset ] =  frameIn[ offset];
-			frameOut[ offset + 1 ] = frameIn[ offset + 1];
-			frameOut[ offset + 2 ] = frameIn[offset + 2];
+
+
+			frameOut[ offset ] =  R/sq;
+			frameOut[ offset + 1 ] = G/sq;
+			frameOut[ offset + 2 ] = B/sq;
 		}
 
 		__syncthreads();
